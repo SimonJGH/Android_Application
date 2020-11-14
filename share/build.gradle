@@ -1,0 +1,92 @@
+if (isRelease) {
+    apply plugin: 'com.android.library'
+} else {
+    apply plugin: 'com.android.application'
+}
+
+android {
+    compileSdkVersion buildId.compileSdkVersion
+    buildToolsVersion buildId.buildToolsVersion
+
+    defaultConfig {
+        if (!isRelease) {
+            applicationId appId.share
+        }
+        minSdkVersion buildId.minSdkVersion
+        targetSdkVersion buildId.targetSdkVersion
+        versionCode buildId.versionCode
+        versionName buildId.versionName
+        flavorDimensions "productFlavors"
+
+        testInstrumentationRunner buildId.testInstrumentationRunner
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'student'
+            keyPassword '111111'
+            storeFile file('sign.keystore')
+            storePassword '111111'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false//去除无用资源
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+
+    productFlavors {
+        app_1_ {
+            // applicationId "com.simon.register"
+            resValue "string", "app_name", "Simon应用-分享"
+            buildConfigField("String", "SERVICE_HOST", "\"${baseUrl.release}\"")
+        }
+
+        app_1_ {
+            // applicationId "com.simon.register"
+            resValue "string", "app_name", "Simon应用-分享"
+            buildConfigField("String", "SERVICE_HOST", "\"${baseUrl.debug}\"")
+        }
+
+    }
+
+    sourceSets {
+        main {
+            if (isRelease) {
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+                java {
+                    exclude '**/debug/**'
+                }
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    dependenciesId.each { k, v -> implementation v }
+
+    // 微信分享
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+}

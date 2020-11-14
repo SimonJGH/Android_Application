@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+//通过变量引用
+def buildId = rootProject.ext.buildId
+android {
+    compileSdkVersion buildId.compileSdkVersion
+    buildToolsVersion buildId.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion buildId.minSdkVersion
+        targetSdkVersion buildId.targetSdkVersion
+        versionCode buildId.versionCode
+        versionName buildId.versionName
+
+        testInstrumentationRunner buildId.testInstrumentationRunner
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    dependenciesId.each { k, v -> implementation v }
+}

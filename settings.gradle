@@ -1,0 +1,4 @@
+include ':base_library'
+include ':share'
+include ':app'
+rootProject.name = "Android_Application"

@@ -1,0 +1,37 @@
+ext {
+
+    //正式环境+测试环境
+    isRelease = true
+    baseUrl = [
+            "release": "https://benteng.wemark.tech",
+            "debug"  : "https://benteng.wemark.tech"
+    ]
+
+    //建立map储存依赖版本
+    buildId = [
+            compileSdkVersion        : 30,
+            buildToolsVersion        : "30.0.1",
+
+            minSdkVersion            : 21,
+            targetSdkVersion         : 30,
+            versionCode              : 1,
+            versionName              : "1.0",
+
+            testInstrumentationRunner: "android.support.test.runner.AndroidJUnitRunner"
+    ]
+
+    appId = [
+            app     : "com.simon.application",
+            register: "com.simon.register",
+            share   : "com.hskj.students"
+    ]
+
+    dependenciesId = [
+            'appcompat'             : 'androidx.appcompat:appcompat:1.2.0',
+            'permissionx'           : 'com.permissionx.guolindev:permissionx:1.4.0',
+            'butterknife'           : 'com.jakewharton:butterknife:10.2.3',
+            'butterknife-annotation': 'com.jakewharton:butterknife-compiler:10.2.3'
+    ]
+
+
+}
