@@ -1,7 +1,5 @@
 package com.simon.share;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,12 +9,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.ExplainReasonCallbackWithBeforeParam;
 import com.permissionx.guolindev.callback.ForwardToSettingsCallback;
 import com.permissionx.guolindev.callback.RequestCallback;
 import com.permissionx.guolindev.request.ExplainScope;
 import com.permissionx.guolindev.request.ForwardScope;
+import com.simon.base_library.BaseActivity;
+import com.simon.base_library.https.XhttpUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -28,19 +29,22 @@ import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ShareActivity extends AppCompatActivity {
+@SuppressWarnings("all")
+@Route(path = "/share/share")
+public class ShareActivity extends BaseActivity {
     private IWXAPI wxapi;
     //微信APP_ID
     private String APP_ID = "wxfbfa763c21551e7a";
@@ -48,11 +52,11 @@ public class ShareActivity extends AppCompatActivity {
     private String imageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1605169847878&di=c929e022169e459481d70df6b629c986&imgtype=0&src=http%3A%2F%2Fd.paper.i4.cn%2Fmax%2F2016%2F11%2F11%2F11%2F1478834975141_580647.jpg";
     private String saveFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + parseFileName(imageUrl);
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
+        ButterKnife.bind(this);
 
         wxapi = WXAPIFactory.createWXAPI(this, "wxfbfa763c21551e7a", false);
         wxapi.registerApp("wxfbfa763c21551e7a");
@@ -81,80 +85,75 @@ public class ShareActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
-    @OnClick({R.id.bt_share_text, R.id.bt_share_image, R.id.bt_share_web, R.id.bt_share_mini,
-            R.id.bt_share_music, R.id.bt_share_video})
+    @OnClick({R2.id.bt_share_text, R2.id.bt_share_image, R2.id.bt_share_web, R2.id.bt_share_mini,
+            R2.id.bt_share_music, R2.id.bt_share_video})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.bt_share_text:
-                shareText("文字分享测试", 0);
-                break;
-            case R.id.bt_share_image:
-                downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        shareImage(0);
-                    }
+        int viewId = view.getId();
+        if (viewId == R.id.bt_share_text) {
+            shareText("文字分享测试", 0);
+        } else if (viewId == R.id.bt_share_image) {
+            downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
+                @Override
+                public void onSuccess() {
+                    shareImage(0);
+                }
 
-                    @Override
-                    public void onFailed(String failMsg) {
+                @Override
+                public void onFailed(String failMsg) {
 
-                    }
-                });
-                break;
-            case R.id.bt_share_web:
-                downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        shareWeb(0);
-                    }
+                }
+            });
+        } else if (viewId == R.id.bt_share_web) {
+            downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
+                @Override
+                public void onSuccess() {
+                    shareWeb(0);
+                }
 
-                    @Override
-                    public void onFailed(String failMsg) {
+                @Override
+                public void onFailed(String failMsg) {
 
-                    }
-                });
-                break;
-            case R.id.bt_share_mini:
-                downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        shareMiniProgram(0, "", "标题", "描述");
-                    }
+                }
+            });
+        } else if (viewId == R.id.bt_share_mini) {
+            downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
+                @Override
+                public void onSuccess() {
+                    shareMiniProgram(0, "", "标题", "描述");
+                }
 
-                    @Override
-                    public void onFailed(String failMsg) {
+                @Override
+                public void onFailed(String failMsg) {
 
-                    }
-                });
-                break;
-            case R.id.bt_share_music:
-                downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        shareMusic(0);
-                    }
+                }
+            });
+        } else if (viewId == R.id.bt_share_music) {
+            downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
+                @Override
+                public void onSuccess() {
+                    shareMusic(0);
+                }
 
-                    @Override
-                    public void onFailed(String failMsg) {
+                @Override
+                public void onFailed(String failMsg) {
 
-                    }
-                });
-                break;
-            case R.id.bt_share_video:
-                downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
-                    @Override
-                    public void onSuccess() {
-                        shareVideo(0);
-                    }
+                }
+            });
+        } else if (viewId == R.id.bt_share_video) {
+            downloadFile(imageUrl, saveFilePath, new onDownloadResultListener() {
+                @Override
+                public void onSuccess() {
+                    shareVideo(0);
+                }
 
-                    @Override
-                    public void onFailed(String failMsg) {
+                @Override
+                public void onFailed(String failMsg) {
 
-                    }
-                });
-                break;
+                }
+            });
         }
     }
 
@@ -397,41 +396,51 @@ public class ShareActivity extends AppCompatActivity {
     /**
      * 下载文件到本地
      *
-     * @param urlString 被下载的文件地址
+     * @param url 被下载的文件地址
      * @param filename  本地文件名
      * @throws Exception 各种异常
      */
-    private void downloadFile(final String urlString, final String filename, final onDownloadResultListener listner) {
-        new Thread(new Runnable() {
+    private void downloadFile(final String url, final String filename, final onDownloadResultListener listner) {
+        RequestParams requestParams = new RequestParams(url);
+        requestParams.setSaveFilePath(saveFilePath);
+        x.http().get(requestParams, new Callback.ProgressCallback<File>() {
             @Override
-            public void run() {
-                try {
-                    // 构造URL
-                    URL url = new URL(urlString);
-                    // 打开连接
-                    URLConnection con = url.openConnection();
-                    // 输入流
-                    InputStream inputStream = con.getInputStream();
-                    // 1K的数据缓冲
-                    byte[] bs = new byte[1024];
-                    // 读取到的数据长度
-                    int len = 0;
-                    // 输出的文件流
-                    OutputStream os = new FileOutputStream(filename);
-                    // 开始读取
-                    while ((len = inputStream.read(bs)) != -1) {
-                        os.write(bs, 0, len);
-                    }
+            public void onWaiting() {
 
-                    // 完毕，关闭所有链接
-                    os.close();
-                    inputStream.close();
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+
+            }
+
+            @Override
+            public void onSuccess(File file) {
+                if (file != null) {
                     listner.onSuccess();
-                } catch (Exception e) {
-                    listner.onFailed(e.getMessage());
                 }
             }
-        }).start();
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                listner.onFailed(ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                listner.onFailed(cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+
     }
 
     interface onDownloadResultListener {

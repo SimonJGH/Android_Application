@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 //通过变量引用
 def buildId = rootProject.ext.buildId
+
 android {
     compileSdkVersion buildId.compileSdkVersion
     buildToolsVersion buildId.buildToolsVersion
@@ -14,6 +15,11 @@ android {
         flavorDimensions "productFlavors"
 
         testInstrumentationRunner buildId.testInstrumentationRunner
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -64,6 +70,7 @@ dependencies {
 
     //公用依赖
     dependenciesId.each { k, v -> implementation v }
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     //如果是正式环境 集成化，测试环境-组件化-可独立运行
     implementation project(path: ':base_library')
@@ -72,4 +79,8 @@ dependencies {
         // implementation project(':login')
          implementation project(':share')
     }
+
+    implementation 'com.alibaba:arouter-api:1.4.0'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.2.1'
+
 }

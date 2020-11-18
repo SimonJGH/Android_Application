@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.simon.share">
 
-    <application>
+    <application  android:name=".MyApplication">
 
     </application>
 

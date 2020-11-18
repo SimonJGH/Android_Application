@@ -1,4 +1,4 @@
-package com.simon.application;
+package com.simon.share;
 
 import android.app.Application;
 
@@ -6,11 +6,10 @@ import com.alibaba.android.arouter.launcher.ARouter;
 
 /**
  * @author YDS
- * @date 2020/11/14
- * @discribe 1、简化事件处理 非必要初始化放在启动页执行
+ * @date 2020/11/17
+ * @discribe
  */
 public class MyApplication extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,6 +21,5 @@ public class MyApplication extends Application {
             ARouter.openDebug();
         }
         ARouter.init(this);
-
     }
 }

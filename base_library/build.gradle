@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 //通过变量引用
 def buildId = rootProject.ext.buildId
@@ -33,9 +32,17 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     dependenciesId.each { k, v -> implementation v }
+
+    api 'org.xutils:xutils:3.9.0'
+
+    api 'com.google.code.gson:gson:2.8.0'
+
+    api 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }
