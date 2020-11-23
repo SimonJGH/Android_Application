@@ -1,3 +1,4 @@
+include ':jpush'
 include ':base_library'
 include ':share'
 include ':app'

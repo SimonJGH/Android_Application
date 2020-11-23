@@ -1,11 +1,9 @@
 package com.simon.application;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.simon.base_library.BaseActivity;
@@ -25,10 +23,10 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.tv_aaa})
-    public void onViewClick(View view){
+    public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.tv_aaa:
-                ARouter.getInstance().build("/share/share").withString("DATA","跳转数据").navigation();
+                ARouter.getInstance().build("/push/push").withString("DATA", "跳转数据").navigation();
                 break;
         }
     }

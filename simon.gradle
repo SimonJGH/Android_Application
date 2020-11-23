@@ -23,7 +23,8 @@ ext {
     appId = [
             app     : "com.simon.application",
             register: "com.simon.register",
-            share   : "com.hskj.students"
+            share   : "com.hskj.students",
+            jpush   : "com.simon.jpush"
     ]
 
     dependenciesId = [

@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.simon.base_library.BaseActivity;
+
 /**
  * 1、处理事件分发
  * 2、设置theme防止白屏
@@ -20,7 +24,10 @@ import android.util.Log;
  *
  * 在onStop中finish防止白屏
  */
-public class SplashActivity extends AppCompatActivity {
+@Route(path = "/splash/splash")
+public class SplashActivity extends BaseActivity {
+    @Autowired
+    String DATA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,12 @@ public class SplashActivity extends AppCompatActivity {
         };
 
         countDownTimer.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("Simon", "MainActivity onResume"+DATA);
     }
 
     @Override
